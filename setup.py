@@ -82,7 +82,7 @@ tensorrt_llm_sources = ["csrc/weightOnlyBatchedGemv/kernelLauncher.cu",
                         "csrc/weightOnlyBatchedGemv/weightOnlyBatchedGemvBs4Int4b.cu",
                         "csrc/weightOnlyBatchedGemv/weightOnlyBatchedGemvBs4Int8b.cu"]
 
-sources = cutlass_sources + custom_sources + tensorrt_llm_sources
+sources = cutlass_sources
 for item in sources:
     sources[sources.index(item)] = os.path.join(current_dir, item)
 
