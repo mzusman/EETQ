@@ -121,6 +121,9 @@ LayoutDetails getLayoutDetailsForTransform(QuantType quant_type, int arch)
     else if (arch >= 80 && arch < 90) {
         return getLayoutDetailsForArch<cutlass::arch::Sm80>(quant_type);
     }
+    else if (arch == 90) {
+        return getLayoutDetailsForArch<cutlass::arch::Sm90>(quant_type);
+    }
     else {
         FT_CHECK_WITH_INFO(false, "Unsupported Arch");
         return LayoutDetails();

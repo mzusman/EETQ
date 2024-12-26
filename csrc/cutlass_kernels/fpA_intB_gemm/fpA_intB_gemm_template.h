@@ -429,6 +429,9 @@ void CutlassFpAIntBGemmRunner<T, WeightType>::dispatch_to_arch<EpilogueTag>(cons
     } else if (sm_ >= 80 && sm_ < 90) {
         dispatch_gemm_to_cutlass<T, WeightType, cutlass::arch::Sm80, EpilogueTag>(
 	    A, B, weight_scales, biases, C, m, n, k, bias_stride, workspace_ptr, workspace_bytes, gemm_config, stream, occupancy);
+    } else if (sm_ == 90) {
+        dispatch_gemm_to_cutlass<T, WeightType, cutlass::arch::Sm90, EpilogueTag>(
+	    A, B, weight_scales, biases, C, m, n, k, bias_stride, workspace_ptr, workspace_bytes, gemm_config, stream, occupancy);
     }
     else {
         throw std::runtime_error(
@@ -822,6 +825,11 @@ void CutlassFpAIntBGemmRunner<T, WeightType>::gemm_bias_act_residual(
       candidate_configs, occupancies, m, n, k, 1, split_k_limit,
       workspace_bytes, multi_processor_count_, true);
 
+  if (sm_ == 90) {
+    dispatch_gemm_residual<T, WeightType, cutlass::arch::Sm90>(
+        chosen_config, A, B, weight_scales, biases, residual, C, m, n, k,
+        activation, binary_op, unary_op, workspace_ptr, workspace_bytes,
+        stream);
   if (sm_ >= 80 && sm_ < 90) {
     dispatch_gemm_residual<T, WeightType, cutlass::arch::Sm80>(
         chosen_config, A, B, weight_scales, biases, residual, C, m, n, k,
